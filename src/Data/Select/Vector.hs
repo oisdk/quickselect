@@ -1,15 +1,16 @@
 -- |
 -- Module      : Data.Select.Vector
--- Description : Quickselect algorithm on boxed vectors.
+-- Description : Introselect algorithm on boxed vectors.
 -- Copyright   : (c) Donnacha Oisín Kidney, 2018
 -- License     : MIT
 -- Maintainer  : mail@doisinkidney.com
 -- Stability   : experimental
 -- Portability : portable
 --
--- This module provides an implementation of quickselect on boxed
--- vectors. It uses a median-of-medians based implementation, which
--- guarantees \(\mathcal{O}(n)\) worst-case time.
+-- This module provides an implementation of introselect on boxed
+-- vectors. It begins as quickselect, but if it discovers it's in a
+-- pathological case, it switches to a median-of-medians
+-- implementation. This guarantees \(\mathcal{O}(n)\) worst-case time.
 module Data.Select.Vector
   (selectBy
   ,select)

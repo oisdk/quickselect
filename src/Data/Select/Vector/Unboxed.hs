@@ -7,9 +7,10 @@
 -- Stability   : experimental
 -- Portability : portable
 --
--- This module provides an implementation of quickselect on unboxed
--- vectors. It uses a median-of-medians based implementation, which
--- guarantees \(\mathcal{O}(n)\) worst-case time.
+-- This module provides an implementation of introselect on unboxed
+-- vectors. It begins as quickselect, but if it discovers it's in a
+-- pathological case, it switches to a median-of-medians
+-- implementation. This guarantees \(\mathcal{O}(n)\) worst-case time.
 module Data.Select.Vector.Unboxed
   (selectBy
   ,select)

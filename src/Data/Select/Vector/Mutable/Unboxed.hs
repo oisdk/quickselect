@@ -1,4 +1,5 @@
 {-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE CPP          #-}
 
 -- |
 -- Module      : Data.Select.Vector.Mutable.Unboxed
@@ -20,22 +21,121 @@ import           Data.Vector.Unboxed.Mutable (MVector,Unbox)
 import qualified Data.Vector.Unboxed.Mutable as Vector
 
 import           Data.Median.Small
+import           Data.Select.Small
 
 import           Control.Applicative
 import           Control.Monad.ST
 
+import           Data.Bits
+
+ilg :: Int -> Int
+#if MIN_VERSION_base(4,7,0)
+ilg !x = 2 * finiteBitSize x - 1 - countLeadingZeros x
+#else
+ilg !m = 2 * loop m 0
+  where
+    loop 0 !k = k - 1
+    loop n !k = loop (n `shiftR` 1) (k+1)
+#endif
+{-# INLINE ilg #-}
+
 -- | @'select' ('<=') xs lb ub n@ returns the 'n'th item in the
 -- indices in the inclusive range ['lb','ub'].
 select :: Unbox a => (a -> a -> Bool) -> MVector s a -> Int -> Int -> Int -> ST s Int
-select lte !xs !l !r !n
-  | l == r = pure l
-  | otherwise = do
-      i <- partition lte xs l r =<< pivot lte xs l r
-      case compare n i of
-          EQ -> pure n
-          LT -> select lte xs l (i - 1) n
-          GT -> select lte xs (i + 1) r n
-{-# INLINABLE select #-}
+select lte !xs !l !r = selectGo lte xs (ilg (r-l)) l r
+{-# INLINE select #-}
+
+selectGo :: Unbox a => (a -> a -> Bool) -> MVector s a -> Int -> Int -> Int -> Int -> ST s Int
+selectGo lte !xs 0 !l !r !n = selectWorstCase lte xs l r n
+selectGo lte !xs !d !l !r !n =
+    case r - l of
+        0 -> pure l
+        1 ->
+            (l +) <$>
+            liftA2
+                (select2 lte (n - l))
+                (Vector.unsafeRead xs l)
+                (Vector.unsafeRead xs (l + 1))
+        2 ->
+            (l +) <$>
+            liftA3
+                (select3 lte (n - l))
+                (Vector.unsafeRead xs l)
+                (Vector.unsafeRead xs (l + 1))
+                (Vector.unsafeRead xs (l + 2))
+        3 ->
+            (l +) <$>
+            liftA4
+                (select4 lte (n - l))
+                (Vector.unsafeRead xs l)
+                (Vector.unsafeRead xs (l + 1))
+                (Vector.unsafeRead xs (l + 2))
+                (Vector.unsafeRead xs (l + 3))
+        4 ->
+            (l +) <$>
+            liftA5
+                (select5 lte (n - l))
+                (Vector.unsafeRead xs l)
+                (Vector.unsafeRead xs (l + 1))
+                (Vector.unsafeRead xs (l + 2))
+                (Vector.unsafeRead xs (l + 3))
+                (Vector.unsafeRead xs (l + 4))
+        s -> do
+            i <-
+                partition lte xs l r =<<
+                ((l +) <$>
+                 liftA3
+                     (median3 lte)
+                     (Vector.unsafeRead xs l)
+                     (Vector.unsafeRead xs (l + (s `div` 2)))
+                     (Vector.unsafeRead xs r))
+            case compare n i of
+                EQ -> pure n
+                LT -> selectGo lte xs (d - 1) l (i - 1) n
+                GT -> selectGo lte xs (d - 1) (i + 1) r n
+{-# INLINABLE selectGo #-}
+
+selectWorstCase :: Unbox a => (a -> a -> Bool) -> MVector s a -> Int -> Int -> Int -> ST s Int
+selectWorstCase lte !xs !l !r !n =
+    case r - l of
+        0 -> pure l
+        1 ->
+            (l +) <$>
+            liftA2
+                (select2 lte (n-l))
+                (Vector.unsafeRead xs l)
+                (Vector.unsafeRead xs (l + 1))
+        2 ->
+            (l +) <$>
+            liftA3
+                (select3 lte (n-l))
+                (Vector.unsafeRead xs l)
+                (Vector.unsafeRead xs (l + 1))
+                (Vector.unsafeRead xs (l + 2))
+        3 ->
+            (l +) <$>
+            liftA4
+                (select4 lte (n-l))
+                (Vector.unsafeRead xs l)
+                (Vector.unsafeRead xs (l + 1))
+                (Vector.unsafeRead xs (l + 2))
+                (Vector.unsafeRead xs (l + 3))
+        4 ->
+            (l +) <$>
+            liftA5
+                (select5 lte (n-l))
+                (Vector.unsafeRead xs l)
+                (Vector.unsafeRead xs (l + 1))
+                (Vector.unsafeRead xs (l + 2))
+                (Vector.unsafeRead xs (l + 3))
+                (Vector.unsafeRead xs (l + 4))
+        _ -> do
+                i <- partition lte xs l r =<< pivot lte xs l r
+                case compare n i of
+                    EQ -> pure n
+                    LT -> selectWorstCase lte xs l (i - 1) n
+                    GT -> selectWorstCase lte xs (i + 1) r n
+{-# INLINABLE selectWorstCase #-}
 
 -- | @'partition' ('<=') xs lb ub n@ partitions the section of the
 -- list defined by the inclusive slice ['lb','ub'] around the element
@@ -72,38 +172,8 @@ liftA5 f v w x y z = liftA3 f v w x <*> y <*> z
 {-# INLINE liftA5 #-}
 
 -- | Median-of-medians algorithm.
-pivot
-    :: Unbox a
-    => (a -> a -> Bool) -> MVector s a -> Int -> Int -> ST s Int
-pivot lte !xs !l !r =
-    case r - l of
-        0 -> pure l
-        1 -> pure l
-        2 ->
-            (l +) <$>
-            liftA3
-                (median3 lte)
-                (Vector.unsafeRead xs l)
-                (Vector.unsafeRead xs (l + 1))
-                (Vector.unsafeRead xs (l + 2))
-        3 ->
-            (l +) <$>
-            liftA4
-                (median4 lte)
-                (Vector.unsafeRead xs l)
-                (Vector.unsafeRead xs (l + 1))
-                (Vector.unsafeRead xs (l + 2))
-                (Vector.unsafeRead xs (l + 3))
-        4 ->
-            (l +) <$>
-            liftA5
-                (median5 lte)
-                (Vector.unsafeRead xs l)
-                (Vector.unsafeRead xs (l + 1))
-                (Vector.unsafeRead xs (l + 2))
-                (Vector.unsafeRead xs (l + 3))
-                (Vector.unsafeRead xs (l + 4))
-        _ -> go l
+pivot :: Unbox a => (a -> a -> Bool) -> MVector s a -> Int -> Int -> ST s Int
+pivot lte !xs !l !r = go l
   where
     go !i =
         case r - i of
@@ -120,7 +190,7 @@ pivot lte !xs !l !r =
                         (Vector.unsafeRead xs i)
                         (Vector.unsafeRead xs (i + 1))
                         (Vector.unsafeRead xs (i + 2))
-                Vector.unsafeSwap xs (m + i) j
+                Vector.unsafeSwap xs (i + m) j
                 end
             3 -> do
                 m <-
@@ -130,7 +200,7 @@ pivot lte !xs !l !r =
                         (Vector.unsafeRead xs (i + 1))
                         (Vector.unsafeRead xs (i + 2))
                         (Vector.unsafeRead xs (i + 3))
-                Vector.unsafeSwap xs (m + i) j
+                Vector.unsafeSwap xs (i + m) j
                 end
             4 -> do
                 m <-
@@ -141,7 +211,7 @@ pivot lte !xs !l !r =
                         (Vector.unsafeRead xs (i + 2))
                         (Vector.unsafeRead xs (i + 3))
                         (Vector.unsafeRead xs (i + 4))
-                Vector.unsafeSwap xs (m + i) j
+                Vector.unsafeSwap xs (i + m) j
                 end
             _ -> do
                 m <-
@@ -152,9 +222,9 @@ pivot lte !xs !l !r =
                         (Vector.unsafeRead xs (i + 2))
                         (Vector.unsafeRead xs (i + 3))
                         (Vector.unsafeRead xs (i + 4))
-                Vector.unsafeSwap xs (m + i) j
+                Vector.unsafeSwap xs (i + m) j
                 go (i + 5)
       where
         !j = l + ((i - l) `div` 5)
-    end = select lte xs l (l + ((r - l) `div` 5)) (l + ((r - l) `div` 10))
+    end = selectWorstCase lte xs l (l + ((r - l) `div` 5)) (l + ((r - l) `div` 10))
 {-# INLINABLE pivot #-}

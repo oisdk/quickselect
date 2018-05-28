@@ -1,5 +1,17 @@
 {-# LANGUAGE CPP #-}
 
+-- |
+-- Module      : Data.Select.Small
+-- Description : Optimal selection functions for small input.
+-- Copyright   : (c) Donnacha Oisín Kidney, 2018
+-- License     : MIT
+-- Maintainer  : mail@doisinkidney.com
+-- Stability   : experimental
+-- Portability : portable
+--
+-- This module provides optimal selection functions for small,
+-- fixed-size inputs. Each function returns the (0-based) index of the
+-- argument which is the nth item, according to the supplied relation.
 module Data.Select.Small
   (select2
   ,select3
