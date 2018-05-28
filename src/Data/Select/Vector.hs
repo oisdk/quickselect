@@ -39,28 +39,22 @@ selectBy lte i xs = runST $ do
 
 -- | \(\mathcal{O}(n)\). Find the nth smallest item in the vector.
 --
--- >>> select 4 "this is an example"
+-- >>> select 4 (Vector.fromList "this is an example")
 -- 'a'
 --
--- >>> select 3 [0,1,4,2,3,5,6]
+-- >>> select 3 (Vector.fromList [0,1,4,2,3,5,6])
 -- 3
 select :: Ord a => Int -> Vector a -> a
 select = selectBy (<=)
 {-# INLINE select #-}
 
 -- $setup
--- >>> :set -XOverloadedLists
--- >>> :set -XOverloadedStrings
 -- >>> :set -XFlexibleContexts
--- >>> :set -XTypeFamilies
 -- >>> import qualified Data.List as List
 -- >>> import Test.QuickCheck
--- >>> import GHC.Exts (IsString(..), IsList(..))
 -- >>> :{
 -- instance Arbitrary a => Arbitrary (Vector a) where
 --   arbitrary = fmap Vector.fromList arbitrary
 --   shrink = map Vector.fromList . shrink . Vector.toList
--- instance (a ~ Char) => IsString (Vector a) where
---   fromString = Vector.fromList
 -- sort = Vector.fromList . List.sort . Vector.toList
 -- :}

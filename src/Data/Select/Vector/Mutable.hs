@@ -25,10 +25,68 @@ import           Data.Select.Small
 import           Control.Applicative
 import           Control.Monad.ST
 
+import           Data.Bits
+
+ilg :: Int -> Int
+ilg !x = 2 * finiteBitSize x - 1 - countLeadingZeros x
+
 -- | @'select' ('<=') xs lb ub n@ returns the 'n'th item in the
 -- indices in the inclusive range ['lb','ub'].
 select :: (a -> a -> Bool) -> MVector s a -> Int -> Int -> Int -> ST s Int
-select lte !xs !l !r !n =
+select lte xs l r = selectGo lte xs (ilg (r-l)) l r
+{-# INLINE select #-}
+
+selectGo :: (a -> a -> Bool) -> MVector s a -> Int -> Int -> Int -> Int -> ST s Int
+selectGo lte xs 0 l r n = selectWorstCase lte xs l r n
+selectGo lte xs d l r n =
+    case r - l of
+        0 -> pure l
+        1 ->
+            (l +) <$>
+            liftA2
+                (select2 lte (n - l))
+                (Vector.unsafeRead xs l)
+                (Vector.unsafeRead xs (l + 1))
+        2 ->
+            (l +) <$>
+            liftA3
+                (select3 lte (n - l))
+                (Vector.unsafeRead xs l)
+                (Vector.unsafeRead xs (l + 1))
+                (Vector.unsafeRead xs (l + 2))
+        3 ->
+            (l +) <$>
+            liftA4
+                (select4 lte (n - l))
+                (Vector.unsafeRead xs l)
+                (Vector.unsafeRead xs (l + 1))
+                (Vector.unsafeRead xs (l + 2))
+                (Vector.unsafeRead xs (l + 3))
+        4 ->
+            (l +) <$>
+            liftA5
+                (select5 lte (n - l))
+                (Vector.unsafeRead xs l)
+                (Vector.unsafeRead xs (l + 1))
+                (Vector.unsafeRead xs (l + 2))
+                (Vector.unsafeRead xs (l + 3))
+                (Vector.unsafeRead xs (l + 4))
+        _ -> do
+            i <-
+                partition lte xs l r =<<
+                ((l +) <$>
+                 liftA3 (median3 lte)
+                     (Vector.unsafeRead xs l)
+                     (Vector.unsafeRead xs (l + ((r - l) `div` 2)))
+                     (Vector.unsafeRead xs r))
+            case compare n i of
+                EQ -> pure n
+                LT -> selectGo lte xs (d-1) l (i - 1) n
+                GT -> selectGo lte xs (d-1) (i + 1) r n
+{-# INLINABLE selectGo #-}
+
+selectWorstCase :: (a -> a -> Bool) -> MVector s a -> Int -> Int -> Int -> ST s Int
+selectWorstCase lte !xs !l !r !n =
     case r - l of
         0 -> pure l
         1 ->
@@ -65,9 +123,9 @@ select lte !xs !l !r !n =
                 i <- partition lte xs l r =<< pivot lte xs l r
                 case compare n i of
                     EQ -> pure n
-                    LT -> select lte xs l (i - 1) n
-                    GT -> select lte xs (i + 1) r n
-{-# INLINABLE select #-}
+                    LT -> selectWorstCase lte xs l (i - 1) n
+                    GT -> selectWorstCase lte xs (i + 1) r n
+{-# INLINABLE selectWorstCase #-}
 
 -- | @'partition' ('<=') xs lb ub n@ partitions the section of the
 -- list defined by the inclusive slice ['lb','ub'] around the element
@@ -158,5 +216,5 @@ pivot lte !xs !l !r = go l
                 go (i + 5)
       where
         !j = l + ((i - l) `div` 5)
-    end = select lte xs l (l + ((r - l) `div` 5)) (l + ((r - l) `div` 10))
+    end = selectWorstCase lte xs l (l + ((r - l) `div` 5)) (l + ((r - l) `div` 10))
 {-# INLINABLE pivot #-}
