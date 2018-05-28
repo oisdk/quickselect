@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 21619307da89e61f148477bcf9bf368e853b618e67f6dd688a92d35bd0236b7d
+-- hash: a37b45a5a4034e3f608335ef7be6120694ec358f242dbc036315f6c7ef7a3b5d
 
 name:           quickselect
 version:        0.1.0.0
@@ -27,6 +27,7 @@ source-repository head
 library
   exposed-modules:
       Data.Median.Small
+      Data.Select.Small
       Data.Select.Vector
       Data.Select.Vector.Mutable
       Data.Select.Vector.Mutable.Unboxed
@@ -37,7 +38,7 @@ library
       src
   ghc-options: -Wall -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns
   build-depends:
-      base >=4.7 && <5
+      base ==4.*
     , vector >=0.7
   if impl(ghc >= 8.0)
     ghc-options: -fwarn-redundant-constraints -Wcompat
@@ -53,7 +54,7 @@ test-suite quickselect-doctests
   ghc-options: -Wall -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -threaded
   build-depends:
       QuickCheck
-    , base >=4.7 && <5
+    , base ==4.*
     , doctest
     , quickselect
     , vector >=0.7
@@ -71,7 +72,7 @@ test-suite quickselect-test
   ghc-options: -Wall -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       QuickCheck
-    , base >=4.7 && <5
+    , base ==4.*
     , quickselect
     , vector >=0.7
   if impl(ghc >= 8.0)
@@ -87,7 +88,7 @@ benchmark bench
       bench
   ghc-options: -Wall -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -threaded -rtsopts -with-rtsopts=-N -O2
   build-depends:
-      base >=4.7 && <5
+      base ==4.*
     , criterion
     , quickselect
     , random

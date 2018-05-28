@@ -20,6 +20,7 @@ import           Data.Vector.Mutable (MVector)
 import qualified Data.Vector.Mutable as Vector
 
 import           Data.Median.Small
+import           Data.Select.Small
 
 import           Control.Applicative
 import           Control.Monad.ST
@@ -27,14 +28,45 @@ import           Control.Monad.ST
 -- | @'select' ('<=') xs lb ub n@ returns the 'n'th item in the
 -- indices in the inclusive range ['lb','ub'].
 select :: (a -> a -> Bool) -> MVector s a -> Int -> Int -> Int -> ST s Int
-select lte !xs !l !r !n
-  | l == r = pure l
-  | otherwise = do
-      i <- partition lte xs l r =<< pivot lte xs l r
-      case compare n i of
-          EQ -> pure n
-          LT -> select lte xs l (i - 1) n
-          GT -> select lte xs (i + 1) r n
+select lte !xs !l !r !n =
+    case r - l of
+        0 -> pure l
+        1 ->
+            (l +) <$>
+            liftA2
+                (select2 lte (n-l))
+                (Vector.unsafeRead xs l)
+                (Vector.unsafeRead xs (l + 1))
+        2 ->
+            (l +) <$>
+            liftA3
+                (select3 lte (n-l))
+                (Vector.unsafeRead xs l)
+                (Vector.unsafeRead xs (l + 1))
+                (Vector.unsafeRead xs (l + 2))
+        3 ->
+            (l +) <$>
+            liftA4
+                (select4 lte (n-l))
+                (Vector.unsafeRead xs l)
+                (Vector.unsafeRead xs (l + 1))
+                (Vector.unsafeRead xs (l + 2))
+                (Vector.unsafeRead xs (l + 3))
+        4 ->
+            (l +) <$>
+            liftA5
+                (select5 lte (n-l))
+                (Vector.unsafeRead xs l)
+                (Vector.unsafeRead xs (l + 1))
+                (Vector.unsafeRead xs (l + 2))
+                (Vector.unsafeRead xs (l + 3))
+                (Vector.unsafeRead xs (l + 4))
+        _ -> do
+                i <- partition lte xs l r =<< pivot lte xs l r
+                case compare n i of
+                    EQ -> pure n
+                    LT -> select lte xs l (i - 1) n
+                    GT -> select lte xs (i + 1) r n
 {-# INLINABLE select #-}
 
 -- | @'partition' ('<=') xs lb ub n@ partitions the section of the
@@ -73,35 +105,7 @@ liftA5 f v w x y z = liftA3 f v w x <*> y <*> z
 
 -- | Median-of-medians algorithm.
 pivot :: (a -> a -> Bool) -> MVector s a -> Int -> Int -> ST s Int
-pivot lte !xs !l !r =
-    case r - l of
-        0 -> pure l
-        1 -> pure l
-        2 ->
-            (l +) <$>
-            liftA3
-                (median3 lte)
-                (Vector.unsafeRead xs l)
-                (Vector.unsafeRead xs (l + 1))
-                (Vector.unsafeRead xs (l + 2))
-        3 ->
-            (l +) <$>
-            liftA4
-                (median4 lte)
-                (Vector.unsafeRead xs l)
-                (Vector.unsafeRead xs (l + 1))
-                (Vector.unsafeRead xs (l + 2))
-                (Vector.unsafeRead xs (l + 3))
-        4 ->
-            (l +) <$>
-            liftA5
-                (median5 lte)
-                (Vector.unsafeRead xs l)
-                (Vector.unsafeRead xs (l + 1))
-                (Vector.unsafeRead xs (l + 2))
-                (Vector.unsafeRead xs (l + 3))
-                (Vector.unsafeRead xs (l + 4))
-        _ -> go l
+pivot lte !xs !l !r = go l
   where
     go !i =
         case r - i of
