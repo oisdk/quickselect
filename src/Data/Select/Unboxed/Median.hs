@@ -12,7 +12,7 @@
 -- worst-case time, however it is usually beaten in practice by
 -- quickselect (which has \(\mathcal{O}(n^2)\) worst-case time). For
 -- an algorithm with the same worst-case time, but better general
--- performance, see "Data.Select.Intro".
+-- performance, see "Data.Select.Unboxed.Intro".
 module Data.Select.Unboxed.Median
   (selectBy
   ,select)

@@ -11,7 +11,7 @@
 -- vectors. It has an average time of \(\mathcal{O}(n)\), but a
 -- worst-case time of \(\mathcal{O}(n^2)\). For an algorithm with
 -- similar performance but a better worst-case time, see
--- "Data.Select.Intro".
+-- "Data.Select.Unboxed.Intro".
 module Data.Select.Unboxed.Quick
   (selectBy
   ,select)
