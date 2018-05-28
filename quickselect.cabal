@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9612afa826eee700c15fe871014a6900c6ae2f6491270a1a10f0e60c622dc564
+-- hash: ace17cfa4a0122582b9a3dc5053172301654bf13e18f1bc17907e76ee3e90a3d
 
 name:           quickselect
 version:        0.1.0.0
@@ -38,7 +38,7 @@ library
   ghc-options: -Wall -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns
   build-depends:
       base >=4.7 && <5
-    , vector
+    , vector >=0.7
   if impl(ghc >= 8.0)
     ghc-options: -fwarn-redundant-constraints -Wcompat
   default-language: Haskell2010
@@ -56,7 +56,7 @@ test-suite quickselect-doctests
     , base >=4.7 && <5
     , doctest
     , quickselect
-    , vector
+    , vector >=0.7
   if impl(ghc >= 8.0)
     ghc-options: -fwarn-redundant-constraints -Wcompat
   default-language: Haskell2010
@@ -73,7 +73,7 @@ test-suite quickselect-test
       base >=4.7 && <5
     , hedgehog
     , quickselect
-    , vector
+    , vector >=0.7
   if impl(ghc >= 8.0)
     ghc-options: -fwarn-redundant-constraints -Wcompat
   default-language: Haskell2010
@@ -91,7 +91,7 @@ benchmark bench
     , criterion
     , quickselect
     , random
-    , vector
+    , vector >=0.7
   if impl(ghc >= 8.0)
     ghc-options: -fwarn-redundant-constraints -Wcompat
   default-language: Haskell2010

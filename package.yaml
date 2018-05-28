@@ -14,7 +14,7 @@ description:         Please see the README on Github at <https://github.com/oisd
 
 dependencies:
 - base >= 4.7 && < 5
-- vector
+- vector >= 0.7
 
 library:
   source-dirs: src

@@ -1,4 +1,19 @@
-module Data.Select.Vector where
+-- |
+-- Module      : Data.Select.Vector
+-- Description : Quickselect algorithm on boxed vectors.
+-- Copyright   : (c) Donnacha Oisín Kidney, 2018
+-- License     : MIT
+-- Maintainer  : mail@doisinkidney.com
+-- Stability   : experimental
+-- Portability : portable
+--
+-- This module provides an implementation of quickselect on boxed
+-- vectors. It uses a median-of-medians based implementation, which
+-- guarantees \(\mathcal{O}(n)\) worst-case time.
+module Data.Select.Vector
+  (selectBy
+  ,select)
+  where
 
 import           Data.Vector                (Vector)
 import qualified Data.Vector                as Vector
@@ -8,6 +23,10 @@ import           Control.Monad.ST
 
 import qualified Data.Select.Vector.Mutable as M
 
+-- | \(\mathcal{O}(n)\). Find the nth item, ordered by the supplied
+-- relation.
+--
+-- prop> i >= 0 && i < length xs ==> sort xs Vector.! i === selectBy (<=) i xs
 selectBy :: (a -> a -> Bool) -> Int -> Vector a -> a
 selectBy _ i xs
   | i < 0 || i >= Vector.length xs =
@@ -18,6 +37,30 @@ selectBy lte i xs = runST $ do
     MVector.unsafeRead ys j
 {-# INLINE selectBy #-}
 
+-- | \(\mathcal{O}(n)\). Find the nth smallest item in the vector.
+--
+-- >>> select 4 "this is an example"
+-- 'a'
+--
+-- >>> select 3 [0,1,4,2,3,5,6]
+-- 3
 select :: Ord a => Int -> Vector a -> a
 select = selectBy (<=)
 {-# INLINE select #-}
+
+-- $setup
+-- >>> :set -XOverloadedLists
+-- >>> :set -XOverloadedStrings
+-- >>> :set -XFlexibleContexts
+-- >>> :set -XTypeFamilies
+-- >>> import qualified Data.List as List
+-- >>> import Test.QuickCheck
+-- >>> import GHC.Exts (IsString(..), IsList(..))
+-- >>> :{
+-- instance Arbitrary a => Arbitrary (Vector a) where
+--   arbitrary = fmap Vector.fromList arbitrary
+--   shrink = map Vector.fromList . shrink . Vector.toList
+-- instance (a ~ Char) => IsString (Vector a) where
+--   fromString = Vector.fromList
+-- sort = Vector.fromList . List.sort . Vector.toList
+-- :}

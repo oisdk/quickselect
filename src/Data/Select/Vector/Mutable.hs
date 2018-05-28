@@ -1,5 +1,15 @@
 {-# LANGUAGE BangPatterns #-}
 
+-- |
+-- Module      : Data.Select.Vector.Mutable
+-- Description : Quickselect internals on mutable, boxed vectors.
+-- Copyright   : (c) Donnacha Oisín Kidney, 2018
+-- License     : MIT
+-- Maintainer  : mail@doisinkidney.com
+-- Stability   : experimental
+-- Portability : portable
+--
+-- Quickselect internals on mutable, boxed vectors.
 module Data.Select.Vector.Mutable
   (select
   ,partition
@@ -14,6 +24,8 @@ import           Data.Median.Small
 import           Control.Applicative
 import           Control.Monad.ST
 
+-- | @'select' ('<=') xs lb ub n@ returns the 'n'th item in the
+-- indices in the inclusive range ['lb','ub'].
 select :: (a -> a -> Bool) -> MVector s a -> Int -> Int -> Int -> ST s Int
 select lte !xs !l !r !n
   | l == r = pure l
@@ -25,6 +37,9 @@ select lte !xs !l !r !n
           GT -> select lte xs (i + 1) r n
 {-# INLINABLE select #-}
 
+-- | @'partition' ('<=') xs lb ub n@ partitions the section of the
+-- list defined by the inclusive slice ['lb','ub'] around the element
+-- at 'n'.
 partition :: (a -> a -> Bool) -> MVector s a -> Int -> Int -> Int -> ST s Int
 partition lte !xs !l !r !i = do
     x <- Vector.unsafeRead xs i
@@ -56,6 +71,7 @@ liftA5
 liftA5 f v w x y z = liftA3 f v w x <*> y <*> z
 {-# INLINE liftA5 #-}
 
+-- | Median-of-medians algorithm.
 pivot :: (a -> a -> Bool) -> MVector s a -> Int -> Int -> ST s Int
 pivot lte !xs !l !r =
     case r - l of
