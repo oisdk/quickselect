@@ -26,7 +26,7 @@ import qualified Data.Select.Vector.Mutable as M
 -- | \(\mathcal{O}(n)\). Find the nth item, ordered by the supplied
 -- relation.
 --
--- prop> i >= 0 && i < length xs ==> sort xs Vector.! i === selectBy (<=) i xs
+-- prop> i >= 0 && i < length xs ==> sort xs !! i === selectBy (<=) i (Vector.fromList xs)
 selectBy :: (a -> a -> Bool) -> Int -> Vector a -> a
 selectBy _ i xs
   | i < 0 || i >= Vector.length xs =
@@ -50,11 +50,5 @@ select = selectBy (<=)
 
 -- $setup
 -- >>> :set -XFlexibleContexts
--- >>> import qualified Data.List as List
+-- >>> import Data.List (sort)
 -- >>> import Test.QuickCheck
--- >>> :{
--- instance Arbitrary a => Arbitrary (Vector a) where
---   arbitrary = fmap Vector.fromList arbitrary
---   shrink = map Vector.fromList . shrink . Vector.toList
--- sort = Vector.fromList . List.sort . Vector.toList
--- :}
