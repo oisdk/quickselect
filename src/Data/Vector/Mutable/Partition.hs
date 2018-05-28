@@ -1,18 +1,21 @@
 {-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE CPP          #-}
 
 module Data.Vector.Mutable.Partition
   (partition)
   where
 
-import           Data.Vector.Mutable (MVector)
-import qualified Data.Vector.Mutable as Vector
+import           Data.Vector.Generic.Mutable (MVector)
+import qualified Data.Vector.Generic.Mutable as Vector
 
 import           Control.Monad.ST
 
 -- | @'partition' ('<=') xs lb ub n@ partitions the section of the
 -- list defined by the inclusive slice ['lb','ub'] around the element
 -- at 'n'.
-partition :: (a -> a -> Bool) -> MVector s a -> Int -> Int -> Int -> ST s Int
+partition
+    :: MVector v a
+    => (a -> a -> Bool) -> v s a -> Int -> Int -> Int -> ST s Int
 partition lte !xs !l !r !i = do
     x <- Vector.unsafeRead xs i
     Vector.unsafeSwap xs i r
@@ -27,5 +30,9 @@ partition lte !xs !l !r !i = do
                   else go s (j + 1)
     s <- go l l
     Vector.unsafeSwap xs r s
+#if MIN_VERSION_base(4,8,0)
     pure s
+#else
+    return s
+#endif
 {-# INLINE partition #-}

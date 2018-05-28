@@ -31,4 +31,4 @@ benchAtSize n =
              , bench "quick" $ nf (Quick.select (n `div` 2)) xs ]
 
 main :: IO ()
-main = defaultMain (map benchAtSize (take 6 (iterate (10*) 100)))
+main = defaultMain (map benchAtSize (take 3 (iterate (10*) 10000)))

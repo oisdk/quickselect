@@ -15,8 +15,8 @@ module Data.Select.Mutable.Intro
   (select)
   where
 
-import           Data.Vector.Mutable (MVector)
-import qualified Data.Vector.Mutable as Vector
+import           Data.Vector.Generic.Mutable (MVector)
+import qualified Data.Vector.Generic.Mutable as Vector
 
 import qualified Data.Select.Mutable.Median as WorstCase
 
@@ -32,7 +32,9 @@ import           Data.Bits
 
 -- | @'select' ('<=') xs lb ub n@ returns the 'n'th item in the
 -- indices in the inclusive range ['lb','ub'].
-select :: (a -> a -> Bool) -> MVector s a -> Int -> Int -> Int -> ST s Int
+select
+    :: MVector v a
+    => (a -> a -> Bool) -> v s a -> Int -> Int -> Int -> ST s Int
 select lte !xs !l' !r' !n = go (ilg (r' - l')) l' r'
   where
 #if MIN_VERSION_base(4,8,0)
@@ -91,5 +93,4 @@ select lte !xs !l' !r' !n = go (ilg (r' - l')) l' r'
                     EQ -> pure n
                     LT -> go (d - 1) l (i - 1)
                     GT -> go (d - 1) (i + 1) r
-    {-# INLINABLE go #-}
 {-# INLINE select #-}
