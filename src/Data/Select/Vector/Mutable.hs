@@ -1,4 +1,5 @@
 {-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE CPP          #-}
 
 -- |
 -- Module      : Data.Select.Vector.Mutable
@@ -28,17 +29,25 @@ import           Control.Monad.ST
 import           Data.Bits
 
 ilg :: Int -> Int
+#if MIN_VERSION_base(4,7,0)
 ilg !x = 2 * finiteBitSize x - 1 - countLeadingZeros x
+#else
+ilg !m = 2 * loop m 0
+  where
+    loop 0 !k = k - 1
+    loop n !k = loop (n `shiftR` 1) (k+1)
+#endif
+{-# INLINE ilg #-}
 
 -- | @'select' ('<=') xs lb ub n@ returns the 'n'th item in the
 -- indices in the inclusive range ['lb','ub'].
 select :: (a -> a -> Bool) -> MVector s a -> Int -> Int -> Int -> ST s Int
-select lte xs l r = selectGo lte xs (ilg (r-l)) l r
+select lte !xs !l !r = selectGo lte xs (ilg (r-l)) l r
 {-# INLINE select #-}
 
 selectGo :: (a -> a -> Bool) -> MVector s a -> Int -> Int -> Int -> Int -> ST s Int
-selectGo lte xs 0 l r n = selectWorstCase lte xs l r n
-selectGo lte xs d l r n =
+selectGo lte !xs 0 !l !r !n = selectWorstCase lte xs l r n
+selectGo lte !xs !d !l !r !n =
     case r - l of
         0 -> pure l
         1 ->
@@ -71,18 +80,19 @@ selectGo lte xs d l r n =
                 (Vector.unsafeRead xs (l + 2))
                 (Vector.unsafeRead xs (l + 3))
                 (Vector.unsafeRead xs (l + 4))
-        _ -> do
+        s -> do
             i <-
                 partition lte xs l r =<<
                 ((l +) <$>
-                 liftA3 (median3 lte)
+                 liftA3
+                     (median3 lte)
                      (Vector.unsafeRead xs l)
-                     (Vector.unsafeRead xs (l + ((r - l) `div` 2)))
+                     (Vector.unsafeRead xs (l + (s `div` 2)))
                      (Vector.unsafeRead xs r))
             case compare n i of
                 EQ -> pure n
-                LT -> selectGo lte xs (d-1) l (i - 1) n
-                GT -> selectGo lte xs (d-1) (i + 1) r n
+                LT -> selectGo lte xs (d - 1) l (i - 1) n
+                GT -> selectGo lte xs (d - 1) (i + 1) r n
 {-# INLINABLE selectGo #-}
 
 selectWorstCase :: (a -> a -> Bool) -> MVector s a -> Int -> Int -> Int -> ST s Int
