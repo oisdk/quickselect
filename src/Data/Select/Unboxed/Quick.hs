@@ -1,6 +1,6 @@
 -- |
--- Module      : Data.Select.Quick
--- Description : Quickselect algorithm on boxed vectors.
+-- Module      : Data.Select.Unboxed.Quick
+-- Description : Quickselect algorithm on unboxed vectors.
 -- Copyright   : (c) Donnacha Oisín Kidney, 2018
 -- License     : MIT
 -- Maintainer  : mail@doisinkidney.com
@@ -12,14 +12,14 @@
 -- worst-case time of \(\mathcal{O}(n^2)\). For an algorithm with
 -- similar performance but a better worst-case time, see
 -- "Data.Select.Intro".
-module Data.Select.Quick
+module Data.Select.Unboxed.Quick
   (selectBy
   ,select)
   where
 
-import           Data.Vector                (Vector)
-import qualified Data.Vector                as Vector
-import qualified Data.Vector.Mutable        as MVector
+import           Data.Vector.Unboxed                (Unbox,Vector)
+import qualified Data.Vector.Unboxed                as Vector
+import qualified Data.Vector.Unboxed.Mutable        as MVector
 
 import           Control.Monad.ST
 
@@ -28,11 +28,11 @@ import qualified Data.Select.Mutable.Quick as M
 -- | \(\mathcal{O}(n)\). Find the nth item, ordered by the supplied
 -- relation.
 --
--- prop> i >= 0 && i < length xs ==> sort xs !! i === selectBy (<=) i (Vector.fromList xs)
-selectBy :: (a -> a -> Bool) -> Int -> Vector a -> a
+-- prop> i >= 0 && i < length xs ==> sort xs !! i === selectBy (<=) i (Vector.fromList (xs :: [Int]))
+selectBy :: Unbox a => (a -> a -> Bool) -> Int -> Vector a -> a
 selectBy _ i xs
   | i < 0 || i >= Vector.length xs =
-      error "Data.Select.Quick.selectBy: index out of bounds."
+      error "Data.Select.Unboxed.Quick.selectBy: index out of bounds."
 selectBy lte i xs = runST $ do
     ys <- Vector.thaw xs
     j <- M.select lte ys 0 (Vector.length xs - 1) i
@@ -44,9 +44,9 @@ selectBy lte i xs = runST $ do
 -- >>> select 4 (Vector.fromList "this is an example")
 -- 'a'
 --
--- >>> select 3 (Vector.fromList [0,1,4,2,3,5,6])
+-- >>> select 3 (Vector.fromList [0,1,4,2,3,5,6]) :: Int
 -- 3
-select :: Ord a => Int -> Vector a -> a
+select :: (Unbox a, Ord a) => Int -> Vector a -> a
 select = selectBy (<=)
 {-# INLINE select #-}
 

@@ -1,7 +1,7 @@
 {-# LANGUAGE BangPatterns #-}
 -- |
 -- Module      : Data.Select.Mutable.Median
--- Description : median-of-medians internals on mutable, boxed vectors.
+-- Description : median-of-medians internals on mutable, generic vectors.
 -- Copyright   : (c) Donnacha Oisín Kidney, 2018
 -- License     : MIT
 -- Maintainer  : mail@doisinkidney.com

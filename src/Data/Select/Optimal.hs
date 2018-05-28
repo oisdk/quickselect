@@ -36,7 +36,7 @@ select2 _ _ _ _ =
 #else
     error
 #endif
-    "Data.Select.Small.select2: index out of bounds."
+    "Data.Select.Optimal.select2: index out of bounds."
 
 -- | Select from 3 items.
 select3 :: (a -> a -> Bool) -> Int -> a -> a -> a -> Int
@@ -88,7 +88,7 @@ select3 _ _ _ _ _ =
 #else
     error
 #endif
-    "Data.Select.Small.select3: index out of bounds."
+    "Data.Select.Optimal.select3: index out of bounds."
 
 -- | Select from 4 items.
 select4 :: (a -> a -> Bool) -> Int -> a -> a -> a -> a -> Int
@@ -282,7 +282,7 @@ select4 _ _ _ _ _ _ =
 #else
     error
 #endif
-    "Data.Select.Small.select4: index out of bounds"
+    "Data.Select.Optimal.select4: index out of bounds"
 
 -- | Select from 5 items.
 select5 :: (a -> a -> Bool) -> Int -> a -> a -> a -> a -> a -> Int
@@ -1554,4 +1554,4 @@ select5 _ _ _ _ _ _ _ =
 #else
     error
 #endif
-    "Data.Select.Small.select5: index out of bounds"
+    "Data.Select.Optimal.select5: index out of bounds"

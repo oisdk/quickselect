@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 01885b0327352d357bb48ed6beffd093ac994730e424c46ea2d68d0ac75791f4
+-- hash: c359e12f6d303d5c3e3136b92b0588cc0304fe32c8d2a2e85c97c519574f1885
 
 name:           quickselect
 version:        0.1.0.0
@@ -36,6 +36,8 @@ library
       Data.Select.Optimal
       Data.Select.Quick
       Data.Select.Unboxed.Intro
+      Data.Select.Unboxed.Median
+      Data.Select.Unboxed.Quick
       Data.Vector.Mutable.Partition
   other-modules:
       Paths_quickselect

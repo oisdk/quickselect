@@ -3,14 +3,14 @@
 
 -- |
 -- Module      : Data.Select.Mutable.Intro
--- Description : Introselect internals on mutable, boxed vectors.
+-- Description : Introselect internals on mutable, generic vectors.
 -- Copyright   : (c) Donnacha Oisín Kidney, 2018
 -- License     : MIT
 -- Maintainer  : mail@doisinkidney.com
 -- Stability   : experimental
 -- Portability : portable
 --
--- Introselect internals on mutable, boxed vectors.
+-- Introselect internals on mutable, generic vectors.
 module Data.Select.Mutable.Intro
   (select)
   where

@@ -2,14 +2,14 @@
 
 -- |
 -- Module      : Data.Select.Mutable.Quick
--- Description : Quickselect internals on mutable, boxed vectors.
+-- Description : Quickselect internals on mutable, generic vectors.
 -- Copyright   : (c) Donnacha Oisín Kidney, 2018
 -- License     : MIT
 -- Maintainer  : mail@doisinkidney.com
 -- Stability   : experimental
 -- Portability : portable
 --
--- Quickselect internals on mutable, boxed vectors.
+-- Quickselect internals on mutable, generic vectors.
 module Data.Select.Mutable.Quick
   (select)
   where

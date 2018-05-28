@@ -31,7 +31,7 @@ import qualified Data.Select.Mutable.Intro as M
 selectBy :: (a -> a -> Bool) -> Int -> Vector a -> a
 selectBy _ i xs
   | i < 0 || i >= Vector.length xs =
-      error "Data.Select.Vector.selectBy: index out of bounds."
+      error "Data.Select.Intro.selectBy: index out of bounds."
 selectBy lte i xs = runST $ do
     ys <- Vector.thaw xs
     j <- M.select lte ys 0 (Vector.length xs - 1) i

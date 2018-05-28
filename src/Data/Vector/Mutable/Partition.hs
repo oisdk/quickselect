@@ -20,7 +20,12 @@ partition lte !xs !l !r !i = do
     x <- Vector.unsafeRead xs i
     Vector.unsafeSwap xs i r
     let go !s !j
-          | j >= r = pure s
+          | j >= r =
+#if MIN_VERSION_base(4,8,0)
+            pure s
+#else
+            return s
+#endif
           | otherwise = do
               y <- Vector.unsafeRead xs j
               if lte y x
