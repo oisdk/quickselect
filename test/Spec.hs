@@ -30,11 +30,12 @@ main =
 #else
        return $
 #endif
+           unwords ["Selecting", show i, "from", show xs] `counterexample`
            conjoin
-               [ y === Quick.select   i vs
-               , y === Median.select  i vs
-               , y === Intro.select   i vs
-               , y === UQuick.select  i us
-               , y === UMedian.select i us
-               , y === UIntro.select  i us
+               [ "quickselect (boxed)"   `counterexample` (y === Quick.select   i vs)
+               , "medians     (boxed)"   `counterexample` (y === Median.select  i vs)
+               , "introselect (boxed)"   `counterexample` (y === Intro.select   i vs)
+               , "quickselect (unboxed)" `counterexample` (y === UQuick.select  i us)
+               , "medians     (unboxed)" `counterexample` (y === UMedian.select i us)
+               , "introselect (unboxed)" `counterexample` (y === UIntro.select  i us)
                ]
