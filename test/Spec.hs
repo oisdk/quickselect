@@ -1,5 +1,4 @@
 {-# LANGUAGE CPP #-}
-{-# options_ghc -fsimpl-tick-factor=10000 #-}
 
 module Main (main) where
 

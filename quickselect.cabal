@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a26c502bac50eb62a2aa7cc752b0800c3c6e20b0cff3204e3de6f1ffdadf27da
+-- hash: e767f06e48666b84796197e190ac221ad9f95ed97bd772180f058e290321ed51
 
 name:           quickselect
 version:        0.1.0.0
@@ -42,7 +42,7 @@ library
       Control.Applicative.LiftMany
   hs-source-dirs:
       src
-  ghc-options: -Wall -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns
+  ghc-options: -fsimpl-tick-factor=30000 -Wall -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns
   build-depends:
       base ==4.*
     , vector >=0.7
@@ -57,7 +57,7 @@ test-suite quickselect-doctests
       Paths_quickselect
   hs-source-dirs:
       doctest
-  ghc-options: -Wall -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -threaded
+  ghc-options: -fsimpl-tick-factor=30000 -Wall -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -threaded
   build-depends:
       QuickCheck
     , base ==4.*
@@ -75,7 +75,7 @@ test-suite quickselect-test
       Paths_quickselect
   hs-source-dirs:
       test
-  ghc-options: -Wall -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -fsimpl-tick-factor=30000 -Wall -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       QuickCheck >=2.4
     , base ==4.*
@@ -92,7 +92,7 @@ benchmark bench
       Paths_quickselect
   hs-source-dirs:
       bench
-  ghc-options: -Wall -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -threaded -rtsopts -with-rtsopts=-N -O2
+  ghc-options: -fsimpl-tick-factor=30000 -Wall -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -threaded -rtsopts -with-rtsopts=-N -O2
   build-depends:
       base ==4.*
     , criterion
