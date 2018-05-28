@@ -6,3 +6,6 @@ matrix:
   - ghc: "8.0"
   - ghc: "8.2"
   - ghc: "8.4"
+before_install: cabal update
+install: travis_wait 30 cabal install --only-dependencies --enable-tests
+script: travis_wait 30 cabal configure --enable-tests && cabal build && cabal test
