@@ -34,4 +34,4 @@ benchAtSize n =
              , bench "unboxed" $ nf (Unboxed.select (n `div` 2)) ys]
 
 main :: IO ()
-main = defaultMain (map benchAtSize [100, 1000, 10000, 100000])
+main = defaultMain (map benchAtSize (take 6 (iterate (10*) 100)))
