@@ -11,7 +11,7 @@
 -- fixed-size inputs. Each function returns the (0-based) index of the
 -- argument which is the median, according to the supplied relation.
 
-module Data.Median.Small
+module Data.Median.Optimal
   (median3
   ,median4
   ,median5)

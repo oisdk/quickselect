@@ -1,17 +1,19 @@
 -- |
--- Module      : Data.Select.Vector
--- Description : Introselect algorithm on boxed vectors.
+-- Module      : Data.Select.Median
+-- Description : Median-of-medians algorithm on boxed vectors.
 -- Copyright   : (c) Donnacha Oisín Kidney, 2018
 -- License     : MIT
 -- Maintainer  : mail@doisinkidney.com
 -- Stability   : experimental
 -- Portability : portable
 --
--- This module provides an implementation of introselect on boxed
--- vectors. It begins as quickselect, but if it discovers it's in a
--- pathological case, it switches to a median-of-medians
--- implementation. This guarantees \(\mathcal{O}(n)\) worst-case time.
-module Data.Select.Vector
+-- This module provides an implementation of median-of-medians on boxed
+-- vectors. As a selection algorithm, it has optimal \(\mathcal{O}(n)\)
+-- worst-case time, however it is usually beaten in practice by
+-- quickselect (which has \(\mathcal{O}(n^2)\) worst-case time). For
+-- an algorithm with the same worst-case time, but better general
+-- performance, see "Data.Select.Intro".
+module Data.Select.Median
   (selectBy
   ,select)
   where
@@ -22,7 +24,7 @@ import qualified Data.Vector.Mutable        as MVector
 
 import           Control.Monad.ST
 
-import qualified Data.Select.Vector.Mutable as M
+import qualified Data.Select.Mutable.Median as M
 
 -- | \(\mathcal{O}(n)\). Find the nth item, ordered by the supplied
 -- relation.

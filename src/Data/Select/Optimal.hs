@@ -1,7 +1,7 @@
 {-# LANGUAGE CPP #-}
 
 -- |
--- Module      : Data.Select.Small
+-- Module      : Data.Select.Optimal
 -- Description : Optimal selection functions for small input.
 -- Copyright   : (c) Donnacha Oisín Kidney, 2018
 -- License     : MIT
@@ -12,7 +12,7 @@
 -- This module provides optimal selection functions for small,
 -- fixed-size inputs. Each function returns the (0-based) index of the
 -- argument which is the nth item, according to the supplied relation.
-module Data.Select.Small
+module Data.Select.Optimal
   (select2
   ,select3
   ,select4
@@ -26,6 +26,7 @@ import GHC.Exts (inline)
 {-# INLINE select4 #-}
 {-# INLINE select5 #-}
 
+-- | Select from 2 items.
 select2 :: (a -> a -> Bool) -> Int -> a -> a -> Int
 select2 lte 0 a b = if inline lte a b then 0 else 1
 select2 lte 1 a b = if inline lte a b then 1 else 0
@@ -37,6 +38,7 @@ select2 _ _ _ _ =
 #endif
     "Data.Select.Small.select2: index out of bounds."
 
+-- | Select from 3 items.
 select3 :: (a -> a -> Bool) -> Int -> a -> a -> a -> Int
 select3 lte 0 a b c =
   if inline lte a b
@@ -88,6 +90,7 @@ select3 _ _ _ _ _ =
 #endif
     "Data.Select.Small.select3: index out of bounds."
 
+-- | Select from 4 items.
 select4 :: (a -> a -> Bool) -> Int -> a -> a -> a -> a -> Int
 select4 lte 0 a b c d =
   if inline lte a b
@@ -281,6 +284,7 @@ select4 _ _ _ _ _ _ =
 #endif
     "Data.Select.Small.select4: index out of bounds"
 
+-- | Select from 5 items.
 select5 :: (a -> a -> Bool) -> Int -> a -> a -> a -> a -> a -> Int
 select5 lte 0 a b c d e =
   if inline lte a b

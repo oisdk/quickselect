@@ -39,7 +39,7 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - quickselect
-    - QuickCheck
+    - QuickCheck >= 2.4
   quickselect-doctests:
     main:                doctests.hs
     source-dirs:         doctest

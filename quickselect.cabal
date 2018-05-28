@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a37b45a5a4034e3f608335ef7be6120694ec358f242dbc036315f6c7ef7a3b5d
+-- hash: f86ad5d625e530a56dd936afa1596962c5b7a2452d6554bfc92b8d7448ed0920
 
 name:           quickselect
 version:        0.1.0.0
@@ -26,12 +26,16 @@ source-repository head
 
 library
   exposed-modules:
-      Data.Median.Small
-      Data.Select.Small
-      Data.Select.Vector
-      Data.Select.Vector.Mutable
-      Data.Select.Vector.Mutable.Unboxed
-      Data.Select.Vector.Unboxed
+      Control.Applicative.LiftMany
+      Data.Median.Optimal
+      Data.Select.Intro
+      Data.Select.Median
+      Data.Select.Mutable.Intro
+      Data.Select.Mutable.Median
+      Data.Select.Mutable.Quick
+      Data.Select.Optimal
+      Data.Select.Quick
+      Data.Vector.Mutable.Partition
   other-modules:
       Paths_quickselect
   hs-source-dirs:
@@ -71,7 +75,7 @@ test-suite quickselect-test
       test
   ghc-options: -Wall -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      QuickCheck
+      QuickCheck >=2.4
     , base ==4.*
     , quickselect
     , vector >=0.7
