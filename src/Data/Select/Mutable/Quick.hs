@@ -1,4 +1,5 @@
 {-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE CPP          #-}
 
 -- |
 -- Module      : Data.Select.Mutable.Quick
@@ -24,6 +25,11 @@ import           Data.Select.Optimal
 
 import           Control.Applicative.LiftMany
 import           Control.Monad.ST
+
+#if !MIN_VERSION_base(4,8,0)
+import           Data.Functor ((<$>))
+import           Control.Applicative (pure)
+#endif
 
 -- | @'select' ('<=') xs lb ub n@ returns the 'n'th item in the
 -- indices in the inclusive range ['lb','ub'].

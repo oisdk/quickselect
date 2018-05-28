@@ -18,6 +18,7 @@ dependencies:
 
 library:
   source-dirs: src
+  other-modules: Control.Applicative.LiftMany
 
 ghc-options:
 - -Wall

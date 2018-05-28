@@ -30,6 +30,11 @@ import           Control.Monad.ST
 
 import           Data.Bits
 
+#if !MIN_VERSION_base(4,8,0)
+import           Data.Functor ((<$>))
+import           Control.Applicative (pure)
+#endif
+
 -- | @'select' ('<=') xs lb ub n@ returns the 'n'th item in the
 -- indices in the inclusive range ['lb','ub'].
 select

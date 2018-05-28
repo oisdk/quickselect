@@ -1,4 +1,6 @@
 {-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE CPP          #-}
+
 -- |
 -- Module      : Data.Select.Mutable.Median
 -- Description : median-of-medians internals on mutable, generic vectors.
@@ -23,6 +25,11 @@ import           Data.Select.Optimal
 
 import           Control.Monad.ST
 import           Control.Applicative.LiftMany
+
+#if !MIN_VERSION_base(4,8,0)
+import           Data.Functor ((<$>))
+import           Control.Applicative (pure)
+#endif
 
 -- | @'select' ('<=') xs lb ub n@ returns the 'n'th item in the
 -- indices in the inclusive range ['lb','ub'].
