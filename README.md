@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/oisdk/quickselect.svg?branch=master)](https://travis-ci.org/oisdk/quickselect)
+
 # quickselect
 
 Haskell implementation of introselect on vectors.
