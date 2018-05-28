@@ -45,10 +45,10 @@ select lte !xs !l' !r' !n = go (ilg (r' - l')) l' r'
 #if MIN_VERSION_base(4,8,0)
     ilg !x = 2 * finiteBitSize x - 1 - countLeadingZeros x
 #else
-    ilg !m = 2 * loop m 0
+    ilg !m = 2 * loop m (0 :: Int)
       where
         loop 0 !k = k - 1
-        loop n !k = loop (n `shiftR` 1) (k+1)
+        loop n' !k = loop (n' `shiftR` 1) (k+1)
 #endif
     {-# INLINE ilg #-}
     go 0 !l !r = WorstCase.select lte xs l r n
