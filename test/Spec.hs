@@ -17,7 +17,7 @@ main =
     do NonEmpty xs <- arbitrary :: Gen (NonEmptyList Int)
        i <- choose (0, length xs - 1)
        let ys = sort xs
-#if MIN_VERSION_base(4,7,0)
+#if MIN_VERSION_base(4,8,0)
        pure $
 #else
        return $

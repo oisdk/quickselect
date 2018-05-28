@@ -30,19 +30,19 @@ import GHC.Exts (inline)
 --
 -- prop> [x,y,z] !! median3 (<=) x y z === sort [x,y,z] !! 1
 median3 :: (a -> a -> Bool) -> a -> a -> a -> Int
-median3 lte _0 _1 _2 =
-  if inline lte _0 _1
+median3 lte a b c =
+  if inline lte a b
     then
-      if inline lte _0 _2
+      if inline lte a c
         then
-          if inline lte _1 _2
+          if inline lte b c
             then 1
             else 2
         else 0
     else
-      if inline lte _1 _2
+      if inline lte b c
         then
-          if inline lte _0 _2
+          if inline lte a c
             then 0
             else 2
         else 1
@@ -61,26 +61,26 @@ median3 lte _0 _1 _2 =
 --
 -- prop> [w,x,y,z] !! median4 (<=) w x y z `elem` (init.tail.sort) [w,x,y,z]
 median4 :: (a -> a -> Bool) -> a -> a -> a -> a -> Int
-median4 lte _0 _1 _2 _3 =
-  if inline lte _0 _1
+median4 lte a b c d =
+  if inline lte a b
     then
-      if inline lte _2 _3
+      if inline lte c d
         then
-          if inline lte _1 _3
+          if inline lte b d
             then 1
             else 3
         else
-          if inline lte _1 _2
+          if inline lte b c
             then 1
             else 2
     else
-      if inline lte _2 _3
+      if inline lte c d
         then
-          if inline lte _0 _3
+          if inline lte a d
             then 0
             else 3
         else
-          if inline lte _0 _2
+          if inline lte a c
             then 0
             else 2
 {-# INLINE median4 #-}
@@ -100,313 +100,313 @@ median4 lte _0 _1 _2 _3 =
 --
 -- prop> [v,w,x,y,z] !! median5 (<=) v w x y z  === sort [v,w,x,y,z] !! 2
 median5 :: (a -> a -> Bool) -> a -> a -> a -> a -> a -> Int
-median5 lte _0 _1 _2 _3 _4 =
-  if inline lte _0 _1
+median5 lte a b c d e =
+  if inline lte a b
     then
-      if inline lte _2 _3
+      if inline lte c d
         then
-          if inline lte _0 _2
+          if inline lte a c
             then
-              if inline lte _1 _3
+              if inline lte b d
                 then
-                  if inline lte _1 _2
+                  if inline lte b c
                     then
-                      if inline lte _0 _4
+                      if inline lte a e
                         then
-                          if inline lte _2 _4
+                          if inline lte c e
                             then 2
                             else
-                              if inline lte _1 _4
+                              if inline lte b e
                                 then 4
                                 else 1
                         else 1
                     else
-                      if inline lte _0 _4
+                      if inline lte a e
                         then
-                          if inline lte _1 _4
+                          if inline lte b e
                             then 1
                             else
-                              if inline lte _2 _4
+                              if inline lte c e
                                 then 4
                                 else 2
                         else 2
                 else
-                  if inline lte _0 _4
+                  if inline lte a e
                     then
-                      if inline lte _3 _4
+                      if inline lte d e
                         then 3
                         else
-                          if inline lte _2 _4
+                          if inline lte c e
                             then 4
                             else 2
                     else
-                      if inline lte _3 _0
+                      if inline lte d a
                         then 3
                         else 2
             else
-              if inline lte _1 _3
+              if inline lte b d
                 then
-                  if inline lte _2 _4
+                  if inline lte c e
                     then
-                      if inline lte _1 _4
+                      if inline lte b e
                         then 1
                         else
-                          if inline lte _0 _4
+                          if inline lte a e
                             then 4
                             else 0
                     else
-                      if inline lte _1 _2
+                      if inline lte b c
                         then 1
                         else 0
                 else
-                  if inline lte _3 _0
+                  if inline lte d a
                     then
-                      if inline lte _2 _4
+                      if inline lte c e
                         then
-                          if inline lte _0 _4
+                          if inline lte a e
                             then 0
                             else
-                              if inline lte _3 _4
+                              if inline lte d e
                                 then 4
                                 else 3
                         else 3
                     else
-                      if inline lte _2 _4
+                      if inline lte c e
                         then
-                          if inline lte _3 _4
+                          if inline lte d e
                             then 3
                             else
-                              if inline lte _0 _4
+                              if inline lte a e
                                 then 4
                                 else 0
                         else 0
         else
-          if inline lte _0 _3
+          if inline lte a d
             then
-              if inline lte _1 _2
+              if inline lte b c
                 then
-                  if inline lte _1 _3
+                  if inline lte b d
                     then
-                      if inline lte _0 _4
+                      if inline lte a e
                         then
-                          if inline lte _3 _4
+                          if inline lte d e
                             then 3
                             else
-                              if inline lte _1 _4
+                              if inline lte b e
                                 then 4
                                 else 1
                         else 1
                     else
-                      if inline lte _0 _4
+                      if inline lte a e
                         then
-                          if inline lte _1 _4
+                          if inline lte b e
                             then 1
                             else
-                              if inline lte _3 _4
+                              if inline lte d e
                                 then 4
                                 else 3
                         else 3
                 else
-                  if inline lte _0 _4
+                  if inline lte a e
                     then
-                      if inline lte _2 _4
+                      if inline lte c e
                         then 2
                         else
-                          if inline lte _3 _4
+                          if inline lte d e
                             then 4
                             else 3
                     else
-                      if inline lte _2 _0
+                      if inline lte c a
                         then 2
                         else 3
             else
-              if inline lte _1 _2
+              if inline lte b c
                 then
-                  if inline lte _3 _4
+                  if inline lte d e
                     then
-                      if inline lte _1 _4
+                      if inline lte b e
                         then 1
                         else
-                          if inline lte _0 _4
+                          if inline lte a e
                             then 4
                             else 0
                     else
-                      if inline lte _1 _3
+                      if inline lte b d
                         then 1
                         else 0
                 else
-                  if inline lte _2 _0
+                  if inline lte c a
                     then
-                      if inline lte _3 _4
+                      if inline lte d e
                         then
-                          if inline lte _0 _4
+                          if inline lte a e
                             then 0
                             else
-                              if inline lte _2 _4
+                              if inline lte c e
                                 then 4
                                 else 2
                         else 2
                     else
-                      if inline lte _3 _4
+                      if inline lte d e
                         then
-                          if inline lte _2 _4
+                          if inline lte c e
                             then 2
                             else
-                              if inline lte _0 _4
+                              if inline lte a e
                                 then 4
                                 else 0
                         else 0
     else
-      if inline lte _2 _3
+      if inline lte c d
         then
-          if inline lte _1 _2
+          if inline lte b c
             then
-              if inline lte _0 _3
+              if inline lte a d
                 then
-                  if inline lte _0 _2
+                  if inline lte a c
                     then
-                      if inline lte _1 _4
+                      if inline lte b e
                         then
-                          if inline lte _2 _4
+                          if inline lte c e
                             then 2
                             else
-                              if inline lte _0 _4
+                              if inline lte a e
                                 then 4
                                 else 0
                         else 0
                     else
-                      if inline lte _1 _4
+                      if inline lte b e
                         then
-                          if inline lte _0 _4
+                          if inline lte a e
                             then 0
                             else
-                              if inline lte _2 _4
+                              if inline lte c e
                                 then 4
                                 else 2
                         else 2
                 else
-                  if inline lte _1 _4
+                  if inline lte b e
                     then
-                      if inline lte _3 _4
+                      if inline lte d e
                         then 3
                         else
-                          if inline lte _2 _4
+                          if inline lte c e
                             then 4
                             else 2
                     else
-                      if inline lte _3 _1
+                      if inline lte d b
                         then 3
                         else 2
             else
-              if inline lte _0 _3
+              if inline lte a d
                 then
-                  if inline lte _2 _4
+                  if inline lte c e
                     then
-                      if inline lte _0 _4
+                      if inline lte a e
                         then 0
                         else
-                          if inline lte _1 _4
+                          if inline lte b e
                             then 4
                             else 1
                     else
-                      if inline lte _0 _2
+                      if inline lte a c
                         then 0
                         else 1
                 else
-                  if inline lte _3 _1
+                  if inline lte d b
                     then
-                      if inline lte _2 _4
+                      if inline lte c e
                         then
-                          if inline lte _1 _4
+                          if inline lte b e
                             then 1
                             else
-                              if inline lte _3 _4
+                              if inline lte d e
                                 then 4
                                 else 3
                         else 3
                     else
-                      if inline lte _2 _4
+                      if inline lte c e
                         then
-                          if inline lte _3 _4
+                          if inline lte d e
                             then 3
                             else
-                              if inline lte _1 _4
+                              if inline lte b e
                                 then 4
                                 else 1
                         else 1
         else
-          if inline lte _1 _3
+          if inline lte b d
             then
-              if inline lte _0 _2
+              if inline lte a c
                 then
-                  if inline lte _0 _3
+                  if inline lte a d
                     then
-                      if inline lte _1 _4
+                      if inline lte b e
                         then
-                          if inline lte _3 _4
+                          if inline lte d e
                             then 3
                             else
-                              if inline lte _0 _4
+                              if inline lte a e
                                 then 4
                                 else 0
                         else 0
                     else
-                      if inline lte _1 _4
+                      if inline lte b e
                         then
-                          if inline lte _0 _4
+                          if inline lte a e
                             then 0
                             else
-                              if inline lte _3 _4
+                              if inline lte d e
                                 then 4
                                 else 3
                         else 3
                 else
-                  if inline lte _1 _4
+                  if inline lte b e
                     then
-                      if inline lte _2 _4
+                      if inline lte c e
                         then 2
                         else
-                          if inline lte _3 _4
+                          if inline lte d e
                             then 4
                             else 3
                     else
-                      if inline lte _2 _1
+                      if inline lte c b
                         then 2
                         else 3
             else
-              if inline lte _0 _2
+              if inline lte a c
                 then
-                  if inline lte _3 _4
+                  if inline lte d e
                     then
-                      if inline lte _0 _4
+                      if inline lte a e
                         then 0
                         else
-                          if inline lte _1 _4
+                          if inline lte b e
                             then 4
                             else 1
                     else
-                      if inline lte _0 _3
+                      if inline lte a d
                         then 0
                         else 1
                 else
-                  if inline lte _2 _1
+                  if inline lte c b
                     then
-                      if inline lte _3 _4
+                      if inline lte d e
                         then
-                          if inline lte _1 _4
+                          if inline lte b e
                             then 1
                             else
-                              if inline lte _2 _4
+                              if inline lte c e
                                 then 4
                                 else 2
                         else 2
                     else
-                      if inline lte _3 _4
+                      if inline lte d e
                         then
-                          if inline lte _2 _4
+                          if inline lte c e
                             then 2
                             else
-                              if inline lte _1 _4
+                              if inline lte b e
                                 then 4
                                 else 1
                         else 1
