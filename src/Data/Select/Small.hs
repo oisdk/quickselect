@@ -9,6 +9,7 @@ module Data.Select.Small
 
 import GHC.Exts (inline)
 
+{-# INLINE select2 #-}
 {-# INLINE select3 #-}
 {-# INLINE select4 #-}
 {-# INLINE select5 #-}
@@ -16,7 +17,13 @@ import GHC.Exts (inline)
 select2 :: (a -> a -> Bool) -> Int -> a -> a -> Int
 select2 lte 0 a b = if inline lte a b then 0 else 1
 select2 lte 1 a b = if inline lte a b then 1 else 0
-select2 _ _ _ _ = errorWithoutStackTrace "Data.Select.Small.select2: index out of bounds."
+select2 _ _ _ _ =
+#if MIN_VERSION_base(4,9,0)
+    errorWithoutStackTrace
+#else
+    error
+#endif
+    "Data.Select.Small.select2: index out of bounds."
 
 select3 :: (a -> a -> Bool) -> Int -> a -> a -> a -> Int
 select3 lte 0 a b c =
