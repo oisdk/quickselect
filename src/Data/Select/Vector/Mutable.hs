@@ -29,7 +29,7 @@ import           Control.Monad.ST
 import           Data.Bits
 
 ilg :: Int -> Int
-#if MIN_VERSION_base(4,7,0)
+#if MIN_VERSION_base(4,8,0)
 ilg !x = 2 * finiteBitSize x - 1 - countLeadingZeros x
 #else
 ilg !m = 2 * loop m 0
