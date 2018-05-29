@@ -105,7 +105,11 @@ select lte !xs !l' !r' !n = go (ilg (r' - l')) l' r'
                              1 -> m
                              2 -> r
                              _ ->
+#if MIN_VERSION_base(4,9,0)
                                  errorWithoutStackTrace
+#else
+                                 error
+#endif
                                      "Data.Select.Mutable.Intro.select: bug!")
                 case compare n i of
                     EQ -> pure n

@@ -88,7 +88,13 @@ select lte !xs !l' !r' !n = go l' r'
                              0 -> l
                              1 -> m
                              2 -> r
-                             _ -> errorWithoutStackTrace "Data.Select.Mutable.Quick.select: bug!")
+                             _ ->
+#if MIN_VERSION_base(4,9,0)
+                                 errorWithoutStackTrace
+#else
+                                 error
+#endif
+                                 "Data.Select.Mutable.Quick.select: bug!")
                 case compare n i of
                     EQ -> pure n
                     LT -> go l (i - 1)
