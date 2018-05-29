@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/oisdk/quickselect.svg?branch=master)](https://travis-ci.org/oisdk/quickselect)
+[![Hackage](https://img.shields.io/hackage/v/quickselect.svg)](http://hackage.haskell.org/package/quickselect) [![Build Status](https://travis-ci.org/oisdk/quickselect.svg?branch=master)](https://travis-ci.org/oisdk/quickselect)
 
 # quickselect
 
