@@ -40,4 +40,4 @@ benchAtSize n =
              ]
 
 main :: IO ()
-main = defaultMain (map benchAtSize (take 3 (iterate (10*) 10000)))
+main = defaultMain (map benchAtSize (take 3 (iterate (10*) 100)))

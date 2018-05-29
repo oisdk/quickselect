@@ -6,4 +6,5 @@ matrix:
   - ghc: "8.0"
   - ghc: "8.2"
   - ghc: "8.4"
-script: travis_wait 50 cabal configure --enable-tests && travis_wait 50 cabal build && cabal test
+    script: travis_wait 70 cabal configure --enable-tests --enable-benchmarks && travis_wait 70 cabal build && cabal test && cabal bench
+script: travis_wait 70 cabal configure --enable-tests && travis_wait 70 cabal build && cabal test
