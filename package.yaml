@@ -18,7 +18,7 @@ dependencies:
 
 library:
   source-dirs: src
-  other-modules: Control.Applicative.LiftMany
+  other-modules: Control.Monad.LiftMany.Strict
 
 ghc-options:
 - -fsimpl-tick-factor=30000

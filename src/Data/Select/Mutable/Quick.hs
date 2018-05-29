@@ -23,11 +23,10 @@ import           Data.Vector.Mutable.Partition
 import           Data.Median.Optimal
 import           Data.Select.Optimal
 
-import           Control.Applicative.LiftMany
+import           Control.Monad.LiftMany.Strict
 import           Control.Monad.ST
 
 #if !MIN_VERSION_base(4,8,0)
-import           Data.Functor ((<$>))
 import           Control.Applicative (pure)
 #endif
 
@@ -39,50 +38,60 @@ select
 select lte !xs !l' !r' !n = go l' r'
   where
     go !l !r =
-      case r - l of
-          0 -> pure l
-          1 ->
-              (l +) <$>
-              liftA2
-                  (select2 lte (n - l))
-                  (Vector.unsafeRead xs l)
-                  (Vector.unsafeRead xs (l + 1))
-          2 ->
-              (l +) <$>
-              liftA3
-                  (select3 lte (n - l))
-                  (Vector.unsafeRead xs l)
-                  (Vector.unsafeRead xs (l + 1))
-                  (Vector.unsafeRead xs (l + 2))
-          3 ->
-              (l +) <$>
-              liftA4
-                  (select4 lte (n - l))
-                  (Vector.unsafeRead xs l)
-                  (Vector.unsafeRead xs (l + 1))
-                  (Vector.unsafeRead xs (l + 2))
-                  (Vector.unsafeRead xs (l + 3))
-          4 ->
-              (l +) <$>
-              liftA5
-                  (select5 lte (n - l))
-                  (Vector.unsafeRead xs l)
-                  (Vector.unsafeRead xs (l + 1))
-                  (Vector.unsafeRead xs (l + 2))
-                  (Vector.unsafeRead xs (l + 3))
-                  (Vector.unsafeRead xs (l + 4))
-          s -> do
-              i <-
-                  partition lte xs l r =<<
-                  ((l +) <$>
-                  liftA3
-                      (median3 lte)
-                      (Vector.unsafeRead xs l)
-                      (Vector.unsafeRead xs (l + (s `div` 2)))
-                      (Vector.unsafeRead xs r))
-              case compare n i of
-                  EQ -> pure n
-                  LT -> go l (i - 1)
-                  GT -> go (i + 1) r
+        case r - l of
+            0 -> pure l
+            1 -> do
+                !i <-
+                    liftM2
+                        (select2 lte (n - l))
+                        (Vector.unsafeRead xs l)
+                        (Vector.unsafeRead xs (l + 1))
+                pure $! i + l
+            2 -> do
+                !i <-
+                    liftM3
+                        (select3 lte (n - l))
+                        (Vector.unsafeRead xs l)
+                        (Vector.unsafeRead xs (l + 1))
+                        (Vector.unsafeRead xs (l + 2))
+                pure $! i + l
+            3 -> do
+                !i <-
+                    liftM4
+                        (select4 lte (n - l))
+                        (Vector.unsafeRead xs l)
+                        (Vector.unsafeRead xs (l + 1))
+                        (Vector.unsafeRead xs (l + 2))
+                        (Vector.unsafeRead xs (l + 3))
+                pure $! i + l
+            4 -> do
+                !i <-
+                    liftM5
+                        (select5 lte (n - l))
+                        (Vector.unsafeRead xs l)
+                        (Vector.unsafeRead xs (l + 1))
+                        (Vector.unsafeRead xs (l + 2))
+                        (Vector.unsafeRead xs (l + 3))
+                        (Vector.unsafeRead xs (l + 4))
+                pure $! i + l
+            s -> do
+                let !m = l + (s `div` 2)
+                !p <-
+                    liftM3
+                        (median3 lte)
+                        (Vector.unsafeRead xs l)
+                        (Vector.unsafeRead xs m)
+                        (Vector.unsafeRead xs r)
+                !i <-
+                    partition lte xs l r
+                        (case p of
+                             0 -> l
+                             1 -> m
+                             2 -> r
+                             _ -> errorWithoutStackTrace "Data.Select.Mutable.Quick.select: bug!")
+                case compare n i of
+                    EQ -> pure n
+                    LT -> go l (i - 1)
+                    GT -> go (i + 1) r
     {-# INLINABLE go #-}
 {-# INLINE select #-}

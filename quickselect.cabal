@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e767f06e48666b84796197e190ac221ad9f95ed97bd772180f058e290321ed51
+-- hash: 7932cd69425994a3d975ef7ac33e597da8396274146cec513a4e250fc25dc752
 
 name:           quickselect
 version:        0.1.0.0
@@ -39,7 +39,7 @@ library
       Data.Select.Unboxed.Quick
       Data.Vector.Mutable.Partition
   other-modules:
-      Control.Applicative.LiftMany
+      Control.Monad.LiftMany.Strict
   hs-source-dirs:
       src
   ghc-options: -fsimpl-tick-factor=30000 -Wall -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns
