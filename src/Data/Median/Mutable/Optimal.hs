@@ -10,31 +10,31 @@ import GHC.Exts (inline)
 
 median3 ::  MVector v a => (a -> a -> Bool) -> v s a -> Int -> Int -> Int -> ST s ()
 median3 lte vc xs ys zs = do
-    x <- Vector.unsafeRead vc xs
-    y <- Vector.unsafeRead vc ys
-    z <- Vector.unsafeRead vc zs
-    if inline lte x y
-        then if inline lte x z
-                 then if inline lte y z
-                          then pure ()
-                          else do
-                              Vector.unsafeWrite vc ys z
-                              Vector.unsafeWrite vc zs y
-                 else do
-                     Vector.unsafeWrite vc xs z
-                     Vector.unsafeWrite vc ys x
-                     Vector.unsafeWrite vc zs y
-        else if inline lte y z
-                 then do
-                     Vector.unsafeWrite vc xs y
-                     if inline lte x z
-                         then Vector.unsafeWrite vc ys x
-                         else do
-                             Vector.unsafeWrite vc ys z
-                             Vector.unsafeWrite vc zs x
-                 else do
-                     Vector.unsafeWrite vc xs z
-                     Vector.unsafeWrite vc zs x
+  x <- Vector.unsafeRead vc xs
+  y <- Vector.unsafeRead vc ys
+  z <- Vector.unsafeRead vc zs
+  if inline lte x y
+    then do
+      Vector.unsafeWrite vc zs y
+      if inline lte x z
+        then
+          unless (inline lte y z) $
+            Vector.unsafeWrite vc ys z
+        else do
+          Vector.unsafeWrite vc xs z
+          Vector.unsafeWrite vc ys x
+    else
+      if inline lte y z
+        then do
+          Vector.unsafeWrite vc xs y
+          if inline lte x z
+            then Vector.unsafeWrite vc ys x
+            else do
+              Vector.unsafeWrite vc ys z
+              Vector.unsafeWrite vc zs x
+        else do
+          Vector.unsafeWrite vc xs z
+          Vector.unsafeWrite vc zs x
 
 median5 :: MVector v a => (a -> a -> Bool) -> v s a -> Int -> Int -> Int -> Int -> Int -> ST s ()
 median5 lte vc vs ws xs ys zs = do
