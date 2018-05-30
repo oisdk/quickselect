@@ -25,6 +25,7 @@ import           Data.Select.Optimal
 
 import           Control.Monad.LiftMany.Strict
 import           Control.Monad.ST
+import           Control.Monad (unless)
 
 #if !MIN_VERSION_base(4,8,0)
 import           Control.Applicative (pure)
@@ -41,12 +42,10 @@ select lte !xs !l' !r' !n = go l' r'
         case r - l of
             0 -> pure l
             1 -> do
-                !i <-
-                    liftM2
-                        (select2 lte (n - l))
-                        (Vector.unsafeRead xs l)
-                        (Vector.unsafeRead xs (l + 1))
-                pure $! i + l
+                x <- Vector.unsafeRead xs l
+                y <- Vector.unsafeRead xs (l+1)
+                unless (lte x y) (Vector.unsafeWrite xs l y >> Vector.unsafeWrite xs (l+1) x)
+                pure n
             2 -> do
                 !i <-
                     liftM3

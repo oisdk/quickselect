@@ -41,7 +41,7 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - quickselect
-    - QuickCheck >= 2.4
+    - hedgehog
   quickselect-doctests:
     main:                doctests.hs
     source-dirs:         doctest

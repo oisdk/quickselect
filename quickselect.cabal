@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7932cd69425994a3d975ef7ac33e597da8396274146cec513a4e250fc25dc752
+-- hash: 32cab56b683dc3dfcea1598b1f98eb6c2257bffe33a6bef0b412b62a7e45e687
 
 name:           quickselect
 version:        0.1.0.0
@@ -77,8 +77,8 @@ test-suite quickselect-test
       test
   ghc-options: -fsimpl-tick-factor=30000 -Wall -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      QuickCheck >=2.4
-    , base ==4.*
+      base ==4.*
+    , hedgehog
     , quickselect
     , vector >=0.7
   if impl(ghc >= 8.0)
