@@ -55,25 +55,6 @@ select lte !xs !l' !r' !n = go l' r'
                         (Vector.unsafeRead xs (l + 1))
                         (Vector.unsafeRead xs (l + 2))
                 pure $! i + l
-            3 -> do
-                !i <-
-                    liftM4
-                        (select4 lte (n - l))
-                        (Vector.unsafeRead xs l)
-                        (Vector.unsafeRead xs (l + 1))
-                        (Vector.unsafeRead xs (l + 2))
-                        (Vector.unsafeRead xs (l + 3))
-                pure $! i + l
-            4 -> do
-                !i <-
-                    liftM5
-                        (select5 lte (n - l))
-                        (Vector.unsafeRead xs l)
-                        (Vector.unsafeRead xs (l + 1))
-                        (Vector.unsafeRead xs (l + 2))
-                        (Vector.unsafeRead xs (l + 3))
-                        (Vector.unsafeRead xs (l + 4))
-                pure $! i + l
             s -> do
                 let !m = l + (s `div` 2)
                 !p <-

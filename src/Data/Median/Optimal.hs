@@ -107,309 +107,189 @@ median5 lte a b c d e =
         then
           if inline lte a c
             then
-              if inline lte b d
-                then
-                  if inline lte b c
-                    then
-                      if inline lte a e
-                        then
-                          if inline lte c e
-                            then 2
-                            else
-                              if inline lte b e
-                                then 4
-                                else 1
-                        else 1
-                    else
-                      if inline lte a e
-                        then
-                          if inline lte b e
-                            then 1
-                            else
-                              if inline lte c e
-                                then 4
-                                else 2
-                        else 2
-                else
-                  if inline lte a e
-                    then
-                      if inline lte d e
-                        then 3
-                        else
-                          if inline lte c e
-                            then 4
-                            else 2
-                    else
-                      if inline lte d a
-                        then 3
-                        else 2
-            else
-              if inline lte b d
+              if inline lte e b
                 then
                   if inline lte c e
                     then
-                      if inline lte b e
-                        then 1
-                        else
-                          if inline lte a e
-                            then 4
-                            else 0
+                      if inline lte e d
+                        then 4
+                        else 3
                     else
-                      if inline lte b c
-                        then 1
-                        else 0
+                      if inline lte c b
+                        then 2
+                        else 1
                 else
-                  if inline lte d a
+                  if inline lte c b
                     then
-                      if inline lte c e
-                        then
-                          if inline lte a e
-                            then 0
-                            else
-                              if inline lte d e
-                                then 4
-                                else 3
+                      if inline lte b d
+                        then 1
                         else 3
                     else
                       if inline lte c e
-                        then
-                          if inline lte d e
-                            then 3
-                            else
-                              if inline lte a e
-                                then 4
-                                else 0
-                        else 0
-        else
-          if inline lte a d
-            then
-              if inline lte b c
+                        then 2
+                        else 4
+            else
+              if inline lte e d
                 then
-                  if inline lte b d
+                  if inline lte a e
                     then
-                      if inline lte a e
-                        then
-                          if inline lte d e
-                            then 3
-                            else
-                              if inline lte b e
-                                then 4
-                                else 1
+                      if inline lte e b
+                        then 4
+                        else 1
+                    else
+                      if inline lte a d
+                        then 0
+                        else 3
+                else
+                  if inline lte a d
+                    then
+                      if inline lte d b
+                        then 3
                         else 1
                     else
                       if inline lte a e
-                        then
-                          if inline lte b e
-                            then 1
-                            else
-                              if inline lte d e
-                                then 4
-                                else 3
-                        else 3
-                else
-                  if inline lte a e
-                    then
-                      if inline lte c e
-                        then 2
-                        else
-                          if inline lte d e
-                            then 4
-                            else 3
-                    else
-                      if inline lte c a
-                        then 2
-                        else 3
-            else
-              if inline lte b c
+                        then 0
+                        else 4
+        else
+          if inline lte a d
+            then
+              if inline lte e b
                 then
                   if inline lte d e
                     then
-                      if inline lte b e
-                        then 1
-                        else
-                          if inline lte a e
-                            then 4
-                            else 0
+                      if inline lte e c
+                        then 4
+                        else 2
                     else
-                      if inline lte b d
-                        then 1
-                        else 0
+                      if inline lte d b
+                        then 3
+                        else 1
                 else
-                  if inline lte c a
+                  if inline lte d b
                     then
-                      if inline lte d e
-                        then
-                          if inline lte a e
-                            then 0
-                            else
-                              if inline lte c e
-                                then 4
-                                else 2
+                      if inline lte b c
+                        then 1
                         else 2
                     else
                       if inline lte d e
-                        then
-                          if inline lte c e
-                            then 2
-                            else
-                              if inline lte a e
-                                then 4
-                                else 0
-                        else 0
+                        then 3
+                        else 4
+            else
+              if inline lte e c
+                then
+                  if inline lte a e
+                    then
+                      if inline lte e b
+                        then 4
+                        else 1
+                    else
+                      if inline lte a c
+                        then 0
+                        else 2
+                else
+                  if inline lte a c
+                    then
+                      if inline lte c b
+                        then 2
+                        else 1
+                    else
+                      if inline lte a e
+                        then 0
+                        else 4
     else
       if inline lte c d
         then
           if inline lte b c
             then
-              if inline lte a d
-                then
-                  if inline lte a c
-                    then
-                      if inline lte b e
-                        then
-                          if inline lte c e
-                            then 2
-                            else
-                              if inline lte a e
-                                then 4
-                                else 0
-                        else 0
-                    else
-                      if inline lte b e
-                        then
-                          if inline lte a e
-                            then 0
-                            else
-                              if inline lte c e
-                                then 4
-                                else 2
-                        else 2
-                else
-                  if inline lte b e
-                    then
-                      if inline lte d e
-                        then 3
-                        else
-                          if inline lte c e
-                            then 4
-                            else 2
-                    else
-                      if inline lte d b
-                        then 3
-                        else 2
-            else
-              if inline lte a d
+              if inline lte e a
                 then
                   if inline lte c e
                     then
-                      if inline lte a e
-                        then 0
-                        else
-                          if inline lte b e
-                            then 4
-                            else 1
+                      if inline lte e d
+                        then 4
+                        else 3
                     else
-                      if inline lte a c
-                        then 0
-                        else 1
+                      if inline lte c a
+                        then 2
+                        else 0
                 else
-                  if inline lte d b
+                  if inline lte c a
                     then
-                      if inline lte c e
-                        then
-                          if inline lte b e
-                            then 1
-                            else
-                              if inline lte d e
-                                then 4
-                                else 3
+                      if inline lte a d
+                        then 0
                         else 3
                     else
                       if inline lte c e
-                        then
-                          if inline lte d e
-                            then 3
-                            else
-                              if inline lte b e
-                                then 4
-                                else 1
-                        else 1
-        else
-          if inline lte b d
-            then
-              if inline lte a c
+                        then 2
+                        else 4
+            else
+              if inline lte e d
                 then
-                  if inline lte a d
+                  if inline lte b e
                     then
-                      if inline lte b e
-                        then
-                          if inline lte d e
-                            then 3
-                            else
-                              if inline lte a e
-                                then 4
-                                else 0
+                      if inline lte e a
+                        then 4
+                        else 0
+                    else
+                      if inline lte b d
+                        then 1
+                        else 3
+                else
+                  if inline lte b d
+                    then
+                      if inline lte d a
+                        then 3
                         else 0
                     else
                       if inline lte b e
-                        then
-                          if inline lte a e
-                            then 0
-                            else
-                              if inline lte d e
-                                then 4
-                                else 3
-                        else 3
-                else
-                  if inline lte b e
-                    then
-                      if inline lte c e
-                        then 2
-                        else
-                          if inline lte d e
-                            then 4
-                            else 3
-                    else
-                      if inline lte c b
-                        then 2
-                        else 3
-            else
-              if inline lte a c
+                        then 1
+                        else 4
+        else
+          if inline lte b d
+            then
+              if inline lte e a
                 then
                   if inline lte d e
                     then
-                      if inline lte a e
-                        then 0
-                        else
-                          if inline lte b e
-                            then 4
-                            else 1
+                      if inline lte e c
+                        then 4
+                        else 2
                     else
-                      if inline lte a d
-                        then 0
-                        else 1
+                      if inline lte d a
+                        then 3
+                        else 0
                 else
-                  if inline lte c b
+                  if inline lte d a
                     then
-                      if inline lte d e
-                        then
-                          if inline lte b e
-                            then 1
-                            else
-                              if inline lte c e
-                                then 4
-                                else 2
+                      if inline lte a c
+                        then 0
                         else 2
                     else
                       if inline lte d e
-                        then
-                          if inline lte c e
-                            then 2
-                            else
-                              if inline lte b e
-                                then 4
-                                else 1
-                        else 1
+                        then 3
+                        else 4
+            else
+              if inline lte e c
+                then
+                  if inline lte b e
+                    then
+                      if inline lte e a
+                        then 4
+                        else 0
+                    else
+                      if inline lte b c
+                        then 1
+                        else 2
+                else
+                  if inline lte b c
+                    then
+                      if inline lte c a
+                        then 2
+                        else 0
+                    else
+                      if inline lte b e
+                        then 1
+                        else 4
 {-# INLINE median5 #-}
 -- $setup
 -- >>> import Test.QuickCheck
